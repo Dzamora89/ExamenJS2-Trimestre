@@ -1,3 +1,5 @@
+let numeroFilas = 6;
+let butacasPorFila = 24;
 let listadoPeliculas = ["Avatar2. El camino del agua;192", "Babylon;189", "Los renglones torcidos de Dios;154"]
 const listadoPelisJSON = []
 let id = 0
@@ -13,6 +15,58 @@ listadoPeliculas.forEach((peli) => {
     }
     listadoPelisJSON.push(pelijSon)
 })
+$('#reserva').on('click',() => {
+    $.ajax({
+        url: '../seccionEntradas.html',
+        success: (respuesta) => {
+            $('#entradas').html(respuesta)
+            $('#mapa').html('')
+            mostrarReserva()
+
+
+            for (let i = 0; i < numeroFilas; i++) {
+                $('#butacas').append(`<div class="filaButacas " id="fila${i}">  </div>`)
+                for (let j = 0; j < butacasPorFila; j++) {
+                    if (j === butacasPorFila/2){
+                        $(`#fila${i}`).append(`<img id="fila${i+1}butaca${j+1}" src="../img/silla.png" class="butaca ms-5">`)
+                    }else {
+                        $(`#fila${i}`).append(`<img id="fila${i+1}butaca${j+1}" src="../img/silla.png" class="butaca">`)
+                    }
+                }
+            }
+            $('.butaca').on('click',(event) => {
+                $(event.delegateTarget).attr('src','../img/silla-verde.png')
+            })
+        },
+        error: (error) => {
+            console.log(error)
+        }
+    });
+
+})
+
+
+
+
+$('#map').on('click', () => {
+    $.ajax({
+        url: '../maps.html',
+        success: (respuesta) => {
+            console.log(respuesta)
+            $('#mapa').append(respuesta)
+            $('#entradas').html('')
+        },
+        error: (error) => {
+            console.log(error)
+        }
+    });
+})
+
+
+
+
+
+
 
 
 //La funcion para que muestre.
