@@ -5,14 +5,14 @@ class InfoBasica
     private $nombreCine;
     private $anoConstruccion;
 
-    /**
-     * @param array $fila
-     */
-    public function __construct(array $fila)
+
+
+    //Constructor por defecto
+    public function __construct()
     {
-        $this->nombreCine = $fila['nombreCine'];
-        $this->anoConstruccion = $fila['anoConstruccion'];
     }
+
+
 
     /**
      * @return mixed

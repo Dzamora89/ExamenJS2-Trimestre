@@ -6,8 +6,8 @@ kanban-plugin: basic
 
 ## Todo
 
-- [ ] ## Actividad1<br>- [ ] Crear El boton
-- [ ] ## Actividad 2 <br>- [ ] Crear el PHP para Json<br>- [ ] Añadir el HTML<br>- [ ] Realizar el Ajax
+- [ ] ## Actividad1<br>- [x] Crear El boton
+- [ ] ## Actividad 2 <br>- [x] Crear el PHP para Json<br>- [x] Añadir el HTML<br>- [x] Realizar el Ajax
 - [ ] ## Actividad 3<br>- [ ] Crear los PHP para el Json<br>- [ ] Crear el Modal
 - [ ] ## Actividad 4<br>- [ ] Crear el HTML<br>- [ ] Crear los inputs para meter Datos
 - [ ] ## Actividad 5<br>- [ ] Crear PHP para Estadisticas<br>- [ ] Crear el Grafico de Estadisticas

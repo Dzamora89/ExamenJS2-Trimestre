@@ -19,8 +19,8 @@ $('#reserva').on('click',() => {
     $.ajax({
         url: '../seccionEntradas.html',
         success: (respuesta) => {
+            borrarAnterior()
             $('#entradas').html(respuesta)
-            $('#mapa').html('')
             mostrarReserva()
 
 
@@ -46,15 +46,20 @@ $('#reserva').on('click',() => {
 })
 
 
-
+function borrarAnterior(){
+    $('.contenido').each(() => {
+        $(this).empty()
+    })
+}
 
 $('#map').on('click', () => {
     $.ajax({
         url: '../maps.html',
         success: (respuesta) => {
             console.log(respuesta)
+            borrarAnterior()
             $('#mapa').append(respuesta)
-            $('#entradas').html('')
+
         },
         error: (error) => {
             console.log(error)
@@ -62,6 +67,20 @@ $('#map').on('click', () => {
     });
 })
 
+$('#acercaDe').on('click', () => {
+    $.ajax({
+        url: '../API/acercaDe.php',
+        dataType: 'json',
+        success: (respuesta) => {
+            borrarAnterior()
+            $('#acercaDiv').append(`
+            <h1> ${respuesta.nombreCine} </h1>
+            <h3>Construido en  ${respuesta.anoConstruccion}</h3>
+            `)
+
+        }
+    })
+})
 
 
 
