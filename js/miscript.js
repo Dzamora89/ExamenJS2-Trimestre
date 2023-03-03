@@ -19,9 +19,12 @@ $('#reserva').on('click',() => {
     $.ajax({
         url: '../seccionEntradas.html',
         success: (respuesta) => {
-            borrarAnterior()
-            $('#entradas').html(respuesta)
-            mostrarReserva()
+            $('#principal').html(respuesta)
+            $('#seleccionEntradas').toggleClass('d-none')
+            $('.peliculas').empty()
+            listadoPelisJSON.forEach((peli) => {
+                $('.peliculas').append(filaPeliculaHtml(peli.id,peli.nombre,peli.duracion))
+            })
 
 
             for (let i = 0; i < numeroFilas; i++) {
@@ -46,19 +49,13 @@ $('#reserva').on('click',() => {
 })
 
 
-function borrarAnterior(){
-    $('.contenido').each(() => {
-        $(this).empty()
-    })
-}
 
 $('#map').on('click', () => {
     $.ajax({
         url: '../maps.html',
         success: (respuesta) => {
             console.log(respuesta)
-            borrarAnterior()
-            $('#mapa').append(respuesta)
+            $('#principal').html(respuesta)
 
         },
         error: (error) => {
@@ -72,10 +69,12 @@ $('#acercaDe').on('click', () => {
         url: '../API/acercaDe.php',
         dataType: 'json',
         success: (respuesta) => {
-            borrarAnterior()
-            $('#acercaDiv').append(`
-            <h1> ${respuesta.nombreCine} </h1>
-            <h3>Construido en  ${respuesta.anoConstruccion}</h3>
+            $('#principal').html(`
+            <div class="container d-flex justify-content-center align-items-center flex-column mt-5">
+              <h1> ${respuesta.nombreCine} </h1>
+              <h3>Construido en  ${respuesta.anoConstruccion}</h3>
+            </div>
+            
             `)
 
         }
@@ -88,17 +87,15 @@ $('#acercaDe').on('click', () => {
 
 
 
-//La funcion para que muestre.
 
+/*
+La funcion para que muestre. Resto del Examen
+TODO: Borrarla Si todo funciona
 function mostrarReserva() {
-    $('#seleccionEntradas').toggleClass('d-none')
-    $('.peliculas').empty()
-    listadoPelisJSON.forEach((peli) => {
-        $('.peliculas').append(filaPeliculaHtml(peli.id,peli.nombre,peli.duracion))
-    })
+
 
 }
-
+*/
 function seleccionarPelicula(indice){
     $('.peliculas').children().each(function (){
         $( this ).css('backgroundColor', $('.peliculas').css('backgroundColor'))
@@ -239,13 +236,12 @@ function filaReservaHtml(nombre, fila, butaca, peliculaSeleccionada) {
     return filaHtml
 }
 function filaPeliculaHtml(indice, nombre, minutos) {
-    let filaHtml = "<div class='fila mt-3 d-flex justify-content-between align-items-center'>\
-    <div class='col-9 ps-2'>\
-    <p class='fw-bold mb-0 fs-5'>" + nombre + "</p>\
-    <span class='text-muted'>" + minutos + "minutos</span>\
-    </div>\
-    <div class='col-3'>\
-    <button onclick='seleccionarPelicula(" + indice + ")' class='btn btn-warning'>Seleccionar</button>\
-    </div></div>"
-    return filaHtml
+    return `<div class='fila mt-3 d-flex justify-content-between align-items-center'>
+    <div class='col-9 ps-2'>
+    <p class='fw-bold mb-0 fs-5'>${nombre}<i id= "modalPelicula" class="bi bi-info-circle"></i></p>\
+    <span class='text-muted'>${minutos} minutos</span>\
+    </div>
+    <div class='col-3'>
+    <button onclick='seleccionarPelicula(${indice})' class='btn btn-warning'>Seleccionar</button>\
+    </div></div>`
 }
