@@ -19,4 +19,38 @@ class BD
             return null;
         }
     }
+
+
+    /*
+     * Funcion para obtener 1 registro de la Base de datos
+     */
+
+    public static function getPelicula($id){
+        try {
+
+            /*
+             * Cambiar la Tabla si lo que necesito es otra cosa
+             */
+
+            $sql = 'Select * 
+            From labutaca.peliculas
+            where idPelicula = :id';
+
+            $conexion = self::realizarConexion();
+            $resultado = $conexion->prepare($sql);
+
+            $resultado->bindParam(':id', $id);
+            $resultado->execute();
+            return new Peliculas($resultado->fetch(PDO::FETCH_ASSOC));
+        }
+        catch (Exception $e)
+        {
+            /*
+             * Si la funciona da error retornara Null;
+             */
+            echo "Error al realizar la conexión: " . $e->getMessage();
+            return null;
+        }
+    }
+
 }

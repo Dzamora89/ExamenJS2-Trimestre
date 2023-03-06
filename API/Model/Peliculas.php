@@ -7,6 +7,7 @@ class Peliculas
     private $duracion;
     private $imagen;
     private $descripcion;
+    private $proyectadas;
 
     /**
      * @param $fila
@@ -18,6 +19,7 @@ class Peliculas
         $this->duracion = $fila['duracion'];
         $this->imagen = $fila['imagen'];
         $this->descripcion = $fila['descripcion'];
+        $this->proyectadas = $fila['proyectadas'];
     }
 
     /**
@@ -42,6 +44,22 @@ class Peliculas
     public function getNombrePelicula()
     {
         return $this->nombrePelicula;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProyectadas()
+    {
+        return $this->proyectadas;
+    }
+
+    /**
+     * @param mixed $proyectadas
+     */
+    public function setProyectadas($proyectadas): void
+    {
+        $this->proyectadas = $proyectadas;
     }
 
     /**

@@ -65,27 +65,50 @@ $('#reserva').on('click',() => {
             */
 
 
-            $('#ModalInfo').html(`
-                 <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                       <h5 class="modal-title">Modal title</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Hola Soy Diego.</p>
-                    </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                  </div>
-                </div>
-               </div>`)
-
-            //Todo: Por aqui vamos
-
             $('#Peliculas').on('click' , '.btn-primary', (element) => {
-                console.log($(element.currentTarget))
+                    $.ajax({
+                    	  // the server script you want to send your data to
+                    		'url': './API/getPelicula.php',
+                    		// all of your POST/GET variables
+                    		'data': {
+                    			 'id': $(element.currentTarget).val()
+                    		},
+                    		// you may change this to GET, if you like...
+                    		'type': 'get',
+                    		// the kind of response that you want from the server
+                    		'dataType': 'json',
+                    		'beforeSend': function () {
+                    			// anything you want to have happen before sending the data to the server...
+                    			// useful for "loading" animations
+                    		}
+                    	})
+                    	.done( function (response) {
+                            console.log(response)
+                             $('#ModalInfo').html(`
+                                    <div class="modal-content w-50 d-flex justify-content-center m-auto">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">${response.nombrePelicula}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>${response.descripcion}</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
+                                `)
+                    	})
+                    	.fail( function (code, status) {
+                    		// what you want to happen if the ajax request fails (404 error, timeout, etc.)
+                    		// 'code' is the numeric code, and 'status' is the text explanation for the error
+                    		// I usually just output some fancy error messages
+                    	})
+                    	.always( function (xhr, status) {
+                    		// what you want to have happen no matter if the response is success or error
+                    		// here, you would "stop" your loading animations, and maybe output a footer at the end of your content, reading "done"
+                    	});
             })
 
 
