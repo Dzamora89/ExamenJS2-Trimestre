@@ -3,6 +3,12 @@ let butacasPorFila = 24;
 let listadoPeliculas = ["Avatar2. El camino del agua;192", "Babylon;189", "Los renglones torcidos de Dios;154"]
 const listadoPelisJSON = []
 let id = 0
+
+
+/*
+Esto Convierte el String en un prototipo
+Todo: Borrar cuando leamos de la base de datos
+ */
 listadoPeliculas.forEach((peli) => {
     let nombrePeli = peli.split(';')[0]
     let duraPeli = peli.split(';')[1]
@@ -15,7 +21,14 @@ listadoPeliculas.forEach((peli) => {
     }
     listadoPelisJSON.push(pelijSon)
 })
+
+/*
+Trozo de Codigo Encargado de la seccion de Reservas
+ */
 $('#reserva').on('click',() => {
+    /*
+    Cargamos los datos de seccion Entrada
+     */
     $.ajax({
         url: '../seccionEntradas.html',
         success: (respuesta) => {
@@ -26,7 +39,9 @@ $('#reserva').on('click',() => {
                 $('.peliculas').append(filaPeliculaHtml(peli.id,peli.nombre,peli.duracion))
             })
 
-
+            /*
+            Con esto dibujamos las butacas.Todo: Seria Necesario tener algun dato para saber cuales estan ocupadas y cuales no
+             */
             for (let i = 0; i < numeroFilas; i++) {
                 $('#butacas').append(`<div class="filaButacas " id="fila${i}">  </div>`)
                 for (let j = 0; j < butacasPorFila; j++) {
@@ -37,9 +52,45 @@ $('#reserva').on('click',() => {
                     }
                 }
             }
+
+            /*
+            Evento que me cambia el color de las butacas
+             */
             $('.butaca').on('click',(event) => {
                 $(event.delegateTarget).attr('src','../img/silla-verde.png')
             })
+
+            /*
+                Actividad 3: Modal para la info de la pelicula
+            */
+
+
+            $('#ModalInfo').html(`
+                 <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                       <h5 class="modal-title">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Hola Soy Diego.</p>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+               </div>`)
+
+            //Todo: Por aqui vamos
+
+            $('#Peliculas').on('click' , '.btn-primary', (element) => {
+                console.log($(element.currentTarget))
+            })
+
+
+
+
         },
         error: (error) => {
             console.log(error)
@@ -48,7 +99,9 @@ $('#reserva').on('click',() => {
 
 })
 
-
+/*
+    Mostramos la seccion de Map en la web
+ */
 
 $('#map').on('click', () => {
     $.ajax({
@@ -63,6 +116,11 @@ $('#map').on('click', () => {
         }
     });
 })
+
+
+/*
+Mostramos la seccion de Acerca de  #AcercaDe
+ */
 
 $('#acercaDe').on('click', () => {
     $.ajax({
@@ -238,7 +296,8 @@ function filaReservaHtml(nombre, fila, butaca, peliculaSeleccionada) {
 function filaPeliculaHtml(indice, nombre, minutos) {
     return `<div class='fila mt-3 d-flex justify-content-between align-items-center'>
     <div class='col-9 ps-2'>
-    <p class='fw-bold mb-0 fs-5'>${nombre}<i id= "modalPelicula" class="bi bi-info-circle"></i></p>\
+    <p class='fw-bold mb-0 fs-5'> ${nombre} <button value="${indice}"  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalInfo">
+<i class="bi bi-info-circle"></i></button></p>\
     <span class='text-muted'>${minutos} minutos</span>\
     </div>
     <div class='col-3'>
