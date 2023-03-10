@@ -35,9 +35,41 @@ $('#reserva').on('click',() => {
             $('#principal').html(respuesta)
             $('#seleccionEntradas').toggleClass('d-none')
             $('.peliculas').empty()
-            listadoPelisJSON.forEach((peli) => {
-                $('.peliculas').append(filaPeliculaHtml(peli.id,peli.nombre,peli.duracion))
-            })
+            $.ajax({
+            	  // the server script you want to send your data to
+            		'url': '../APi/getAllPeliculas.php',
+            		// all of your POST/GET variables
+            		'data': {
+            			// 'dataname': $('input').val(), ...
+            		},
+            		// you may change this to GET, if you like...
+            		'type': 'post',
+            		// the kind of response that you want from the server
+            		'dataType': 'json',
+            		'beforeSend': function () {
+            			// anything you want to have happen before sending the data to the server...
+            			// useful for "loading" animations
+            		}
+            	})
+            	.done( function (response) {
+            		// what you want to happen when an ajax call to the server is successfully completed
+            		// 'response' is what you get back from the script/server
+            		// usually you want to format your response and spit it out to the page
+                    response.forEach((data) => {
+                        if (data.proyectadas > 0){
+                            $('.peliculas').append(filaPeliculaHtml(data.idPelicula, data.nombrePelicula, data.duracion))
+                        }
+                    })
+            	})
+            	.fail( function (code, status) {
+            		// what you want to happen if the ajax request fails (404 error, timeout, etc.)
+            		// 'code' is the numeric code, and 'status' is the text explanation for the error
+            		// I usually just output some fancy error messages
+            	})
+            	.always( function (xhr, status) {
+            		// what you want to have happen no matter if the response is success or error
+            		// here, you would "stop" your loading animations, and maybe output a footer at the end of your content, reading "done"
+            	});
 
             /*
             Con esto dibujamos las butacas.Todo: Seria Necesario tener algun dato para saber cuales estan ocupadas y cuales no

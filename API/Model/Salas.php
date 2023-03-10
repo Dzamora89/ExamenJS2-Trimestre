@@ -4,7 +4,8 @@ class Salas
 {
     private $idSala;
     private $nombreSala;
-    private $aforo;
+    private $filas;
+    private $butacas;
 
     /**
      * @param array $fila
@@ -13,7 +14,40 @@ class Salas
     {
         $this->idSala = $fila['idSala'];
         $this->nombreSala = $fila['nombreSala'];
-        $this->aforo = $fila['aforo'];
+        $this->filas = $fila['filas'];
+        $this->butacas = $fila['butacas'];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFilas(): mixed
+    {
+        return $this->filas;
+    }
+
+    /**
+     * @param mixed $filas
+     */
+    public function setFilas(mixed $filas): void
+    {
+        $this->filas = $filas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getButacas(): mixed
+    {
+        return $this->butacas;
+    }
+
+    /**
+     * @param mixed $butacas
+     */
+    public function setButacas(mixed $butacas): void
+    {
+        $this->butacas = $butacas;
     }
 
     /**
@@ -47,22 +81,5 @@ class Salas
     {
         $this->nombreSala = $nombreSala;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getAforo()
-    {
-        return $this->aforo;
-    }
-
-    /**
-     * @param mixed $aforo
-     */
-    public function setAforo($aforo)
-    {
-        $this->aforo = $aforo;
-    }
-
 
 }

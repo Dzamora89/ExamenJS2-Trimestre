@@ -53,4 +53,127 @@ class BD
         }
     }
 
+
+    public static function getAllPeliculas() {
+        try {
+
+            /*
+             * Cambiar la Tabla si lo que necesito es otra cosa
+             */
+
+            $sql = 'Select * 
+            From labutaca.peliculas';
+
+            $conexion = self::realizarConexion();
+            $resultado = $conexion->prepare($sql);
+            $resultado->execute();
+            $rowNumber = $resultado->rowCount();
+
+            if ($rowNumber > 0) {
+                //Driver Array
+                $peliculaArray = array();
+//    $post_Array['Data'] = [];
+                while ($row = $resultado->fetch(PDO::FETCH_ASSOC)) {
+                    extract($row);
+                    $peliculaItem = array(
+                        'idPelicula' => $idPelicula,
+                        'nombrePelicula' => $nombrePelicula,
+                        'duracion' => $duracion,
+                        'imagen' => $imagen,
+                        'descripcion' => $descripcion,
+                        'proyectadas' => $proyectadas
+                    );
+                    $peliculaArray[] = $peliculaItem;
+                }
+                //Turn into Json & Output
+                return $peliculaArray;
+
+            } else {
+                //No found
+                echo json_encode(array(
+                    'message' => 'No post found'
+                ));
+        }}
+        catch (Exception $e)
+        {
+            /*
+             * Si la funciona da error retornara Null;
+             */
+            echo "Error al realizar la conexión: " . $e->getMessage();
+            return null;
+        }
+    }
+
+    public static function getAllSalas() {
+        try {
+            /*
+             * Cambiar la Tabla si lo que necesito es otra cosa
+             */
+            $sql = 'Select *
+            From labutaca.salas';
+
+            $conexion = self::realizarConexion();
+            $resultado = $conexion->prepare($sql);
+            $resultado->execute();
+            $rowNumber = $resultado->rowCount();
+
+            if ($rowNumber > 0) {
+                $array = array();
+                while ($row = $resultado->fetch(PDO::FETCH_ASSOC)) {
+                    extract($row);
+                    $item = array(
+                        'idSala' => $idSala,
+                        'nombreSala' => $nombreSala,
+                        'filas' => $filas,
+                        'butacas' => $butacas
+                    );
+                    $array[] = $item;
+                }
+                return $array;
+            } else {
+                echo json_encode(array(
+                    'message' => 'No sala found'
+                ));
+            }
+        }catch (Exception $e) {
+            /*
+             * Si la funciona da error retornara Null;
+             */
+            echo "Error al realizar la conexión: " . $e->getMessage();
+            return null;
+        }
+        return null;
+    }
+
+    public static function updateSala($idSala, $filas, $butacas){
+        try {
+            $sql = "UPDATE labutaca.salas
+                    set filas = :filas,
+                        butacas = :butacas
+                    where idSala = :idSala";
+
+            $conexion = BD::realizarConexion();
+            $resultado = $conexion->prepare($sql);
+            $resultado->bindParam(':filas', $filas);
+            $resultado->bindParam(':butacas', $butacas);
+            $resultado->bindParam(':idSala', $idSala);
+            $resultado->execute();
+            $afectados = $resultado->rowCount();
+            $conexion = null;
+            $resultado->closeCursor();
+            if ($afectados == 1) {
+                return "Modificacion realizada";
+            }else {
+                return "Modificacion Fallida";
+            }
+        }catch (Exception $e){
+            /*
+            * Si la funciona da error retornara Null;
+            */
+            echo "Error al realizar la conexión: " . $e->getMessage();
+            return null;
+        }
+
+    }
+
 }

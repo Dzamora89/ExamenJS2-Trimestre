@@ -11,5 +11,7 @@
     <orderEntry type="library" name="@types/jquery-ajax-chain" level="application" />
     <orderEntry type="library" name="bootstrap-icons" level="application" />
     <orderEntry type="library" name="a3febeb94b" level="application" />
+    <orderEntry type="library" name="@types/bootstrap" level="application" />
+    <orderEntry type="library" name="@types/jquery" level="application" />
   </component>
 </module>
