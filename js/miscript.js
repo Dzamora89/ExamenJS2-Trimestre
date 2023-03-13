@@ -1,26 +1,3 @@
-let numeroFilas = 6;
-let butacasPorFila = 24;
-let listadoPeliculas = ["Avatar2. El camino del agua;192", "Babylon;189", "Los renglones torcidos de Dios;154"]
-const listadoPelisJSON = []
-let id = 0
-
-
-/*
-Esto Convierte el String en un prototipo
-Todo: Borrar cuando leamos de la base de datos
- */
-listadoPeliculas.forEach((peli) => {
-    let nombrePeli = peli.split(';')[0]
-    let duraPeli = peli.split(';')[1]
-    const pelijSon = {
-        "id" : id++,
-        "nombre" : nombrePeli,
-        "duracion" : duraPeli,
-        'selecionada' : false,
-        'entradas' : []
-    }
-    listadoPelisJSON.push(pelijSon)
-})
 
 /*
 Trozo de Codigo Encargado de la seccion de Reservas
@@ -57,7 +34,7 @@ $('#reserva').on('click',() => {
             		// usually you want to format your response and spit it out to the page
                     response.forEach((data) => {
                         if (data.proyectadas > 0){
-                            $('.peliculas').append(filaPeliculaHtml(data.idPelicula, data.nombrePelicula, data.duracion))
+                            $('.peliculas').append(filaPeliculaHtml(data.idPelicula, data.nombrePelicula, data.duracion, data.nombreSala,data.proyectadas))
                         }
                     })
             	})
@@ -71,26 +48,8 @@ $('#reserva').on('click',() => {
             		// here, you would "stop" your loading animations, and maybe output a footer at the end of your content, reading "done"
             	});
 
-            /*
-            Con esto dibujamos las butacas.Todo: Seria Necesario tener algun dato para saber cuales estan ocupadas y cuales no
-             */
-            for (let i = 0; i < numeroFilas; i++) {
-                $('#butacas').append(`<div class="filaButacas " id="fila${i}">  </div>`)
-                for (let j = 0; j < butacasPorFila; j++) {
-                    if (j === butacasPorFila/2){
-                        $(`#fila${i}`).append(`<img id="fila${i+1}butaca${j+1}" src="../img/silla.png" class="butaca ms-5">`)
-                    }else {
-                        $(`#fila${i}`).append(`<img id="fila${i+1}butaca${j+1}" src="../img/silla.png" class="butaca">`)
-                    }
-                }
-            }
 
-            /*
-            Evento que me cambia el color de las butacas
-             */
-            $('.butaca').on('click',(event) => {
-                $(event.delegateTarget).attr('src','../img/silla-verde.png')
-            })
+
 
             /*
                 Actividad 3: Modal para la info de la pelicula
@@ -115,7 +74,6 @@ $('#reserva').on('click',() => {
                     		}
                     	})
                     	.done( function (response) {
-                            console.log(response)
                              $('#ModalInfo').html(`
                                     <div class="modal-content w-50 d-flex justify-content-center m-auto">
                                         <div class="modal-header">
@@ -163,7 +121,6 @@ $('#map').on('click', () => {
     $.ajax({
         url: '../maps.html',
         success: (respuesta) => {
-            console.log(respuesta)
             $('#principal').html(respuesta)
 
         },
@@ -193,39 +150,127 @@ $('#acercaDe').on('click', () => {
 
         }
     })
+    $.ajax({
+    	  // the server script you want to send your data to
+    		'url': '../api/getAllSalas.php',
+    		// all of your POST/GET variables
+    		'data': {
+    			// 'dataname': $('input').val(), ...
+    		},
+    		// you may change this to GET, if you like...
+    		'type': 'post',
+    		// the kind of response that you want from the server
+    		'dataType': 'json',
+    		'beforeSend': function () {
+    			// anything you want to have happen before sending the data to the server...
+    			// useful for "loading" animations
+    		}
+    	})
+    	.done( function (response) {
+    		// what you want to happen when an ajax call to the server is successfully completed
+    		// 'response' is what you get back from the script/server
+    		// usually you want to format your response and spit it out to the page
+            response.forEach(sala => {
+                if (sala.idSala != 4) {
+                    let aforo = parseInt(sala.filas) * parseInt(sala.butacas)
+                    $('#principal').append(`
+                <div class="container d-flex justify-content-center align-items-center flex-column mt-5">
+                    <h1> ${sala.nombreSala} </h1>
+                    <h3>Aforo: ${aforo}</h3>
+                </div>
+            `)
+                }
+            })
+
+    	})
+    	.fail( function (code, status) {
+    		// what you want to happen if the ajax request fails (404 error, timeout, etc.)
+    		// 'code' is the numeric code, and 'status' is the text explanation for the error
+    		// I usually just output some fancy error messages
+    	})
+    	.always( function (xhr, status) {
+    		// what you want to have happen no matter if the response is success or error
+    		// here, you would "stop" your loading animations, and maybe output a footer at the end of your content, reading "done"
+    	});
 })
 
 
 
-
-
-
-
-
 /*
-La funcion para que muestre. Resto del Examen
-TODO: Borrarla Si todo funciona
-function mostrarReserva() {
-
-
-}
-*/
-function seleccionarPelicula(indice){
+Funcion que selecciona la sala y la pelicula para la que se quiere comprar la pelicula
+ */
+function seleccionarPelicula(indice,proyectadas){
+    $('#entradasSeleccionadas').html('')
     $('.peliculas').children().each(function (){
         $( this ).css('backgroundColor', $('.peliculas').css('backgroundColor'))
     })
-    $('.peliculas').children().eq(indice).css('backgroundColor', 'lightgrey')
+    $(`#sel${indice}`).css('backgroundColor', 'lightgrey')
+    $.ajax({
+    		'url': './Api/get1sala.php?id=' + proyectadas,
+            'data': {
+                'id': proyectadas
+            },
+    		'type': 'GET',
+    		'dataType': 'json'
+    	})
+    	.done( function (response) {
+            /*
+           Con esto dibujamos las butacas.Todo: Seria Necesario tener algun dato para saber cuales estan ocupadas y cuales no
+            */
+            $('#butacas').html('');
+            for (let i = 0; i < response.filas; i++) {
+                $('#butacas').append(`<div class="filaButacas d-flex justify-content-center " id="fila${i}">  </div>`)
+                for (let j = 0; j < response.butacas; j++) {
+                    if (j === (parseInt(response.butacas)/2)){
+                        $(`#fila${i}`).append(`<img id="fila:${i+1}:butaca:${j+1}" src="../img/silla.png" class="butaca ms-5">`)
+                    }else {
+                        $(`#fila${i}`).append(`<img id="fila:${i+1}:butaca:${j+1}" src="../img/silla.png" class="butaca">`)
+                    }
+                }
+            }
+            /*
+           Evento que me cambia el color de las butacas
+            */
 
-    listadoPelisJSON.forEach((peli) => {
-        if (peli.id === indice){
-            peli.selecionada = true
-            $('#peliculaSeleccionada').text(peli.nombre)
-        }else {
-            peli.selecionada = false
-        }
-    })
+    	})
+    	.fail( function (code, status) {
+    		// what you want to happen if the ajax request fails (404 error, timeout, etc.)
+    		// 'code' is the numeric code, and 'status' is the text explanation for the error
+    		// I usually just output some fancy error messages
+    	})
+
+
+
+
 }
+$(document).on('click','.butaca',(event) => {
+    let source = $(event.target).attr('src');
+    let libre = '../img/silla.png'
+    let ocupado = '../img/silla-roja.png'
+    let seleccionado = '../img/silla-verde.png'
+    let id = $(event.target).attr('id');
+    let idCortado = id.split(':')
+    if (source === libre) {
+        $(event.target).attr('src',seleccionado)
+        $('#entradasSeleccionadas').append(`
+                <div id="Tarjetafila${idCortado[1]}butaca${idCortado[3]}" class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Entrada Seleccionada</h5>
+                    <p class="card-text">Fila ${idCortado[1]} Butaca ${idCortado[3]}</p>
+                </div>
+            </div>
+                `)
+    }
+    if (source === ocupado){
+        alert('Esa butaca no esta disponible')
+    }
+    if (source === seleccionado){
+        $(event.target).attr('src',libre)
+        let idTarjeta = `#Tarjetafila${idCortado[1]}butaca${idCortado[3]}`
+        $(idTarjeta).remove()
+    }
 
+})
 
 function reservarPelicula(){
     let pelicula = listadoPelisJSON.find((peli) => peli.selecionada)
@@ -349,14 +394,14 @@ function filaReservaHtml(nombre, fila, butaca, peliculaSeleccionada) {
     </div></div>"
     return filaHtml
 }
-function filaPeliculaHtml(indice, nombre, minutos) {
-    return `<div class='fila mt-3 d-flex justify-content-between align-items-center'>
+function filaPeliculaHtml(indice, nombre, minutos, nombreSala,proyectadas) {
+    return `<div id="sel${indice}" class='fila mt-3 d-flex justify-content-between align-items-center'>
     <div class='col-9 ps-2'>
     <p class='fw-bold mb-0 fs-5'> ${nombre} <button value="${indice}"  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalInfo">
 <i class="bi bi-info-circle"></i></button></p>\
     <span class='text-muted'>${minutos} minutos</span>\
     </div>
     <div class='col-3'>
-    <button onclick='seleccionarPelicula(${indice})' class='btn btn-warning'>Seleccionar</button>\
+    <button onclick='seleccionarPelicula(${indice},${proyectadas})' class='btn btn-warning'>${nombreSala}</button>\
     </div></div>`
 }

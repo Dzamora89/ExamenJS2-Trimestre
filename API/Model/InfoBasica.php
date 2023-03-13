@@ -4,6 +4,8 @@ class InfoBasica
 {
     private $nombreCine;
     private $anoConstruccion;
+    private $nombreSala;
+    private $aforo;
 
 
 

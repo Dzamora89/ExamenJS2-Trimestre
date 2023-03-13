@@ -8,6 +8,7 @@ class Peliculas
     private $imagen;
     private $descripcion;
     private $proyectadas;
+    private $nombreSala;
 
     /**
      * @param $fila
@@ -20,6 +21,7 @@ class Peliculas
         $this->imagen = $fila['imagen'];
         $this->descripcion = $fila['descripcion'];
         $this->proyectadas = $fila['proyectadas'];
+        $this->nombreSala = $fila['nombreSala'];
     }
 
     /**

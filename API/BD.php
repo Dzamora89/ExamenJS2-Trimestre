@@ -32,8 +32,10 @@ class BD
              * Cambiar la Tabla si lo que necesito es otra cosa
              */
 
-            $sql = 'Select * 
-            From labutaca.peliculas
+            $sql = 'Select peliculas.idPelicula, peliculas.nombrePelicula, peliculas.duracion,
+                        peliculas.imagen, peliculas.descripcion, peliculas.proyectadas, salas.nombreSala
+            From labutaca.peliculas 
+                join labutaca.salas on labutaca.peliculas.proyectadas = labutaca.salas.idSala
             where idPelicula = :id';
 
             $conexion = self::realizarConexion();
@@ -61,8 +63,10 @@ class BD
              * Cambiar la Tabla si lo que necesito es otra cosa
              */
 
-            $sql = 'Select * 
-            From labutaca.peliculas';
+            $sql = 'Select peliculas.idPelicula, peliculas.nombrePelicula, peliculas.duracion,
+                        peliculas.imagen, peliculas.descripcion,peliculas.proyectadas, salas.nombreSala
+            From labutaca.peliculas 
+                join labutaca.salas on labutaca.peliculas.proyectadas = labutaca.salas.idSala';
 
             $conexion = self::realizarConexion();
             $resultado = $conexion->prepare($sql);
@@ -81,7 +85,8 @@ class BD
                         'duracion' => $duracion,
                         'imagen' => $imagen,
                         'descripcion' => $descripcion,
-                        'proyectadas' => $proyectadas
+                        'proyectadas' => $proyectadas,
+                        'nombreSala' => $nombreSala
                     );
                     $peliculaArray[] = $peliculaItem;
                 }
@@ -174,6 +179,34 @@ class BD
             return null;
         }
 
+    }
+
+    public static function getSala($id) {
+        try {
+
+            /*
+             * Cambiar la Tabla si lo que necesito es otra cosa
+             */
+
+            $sql = 'Select *
+            from labutaca.salas
+            where idSala = :id';
+
+            $conexion = self::realizarConexion();
+            $resultado = $conexion->prepare($sql);
+
+            $resultado->bindParam(':id', $id);
+            $resultado->execute();
+            return new Salas($resultado->fetch(PDO::FETCH_ASSOC));
+        }
+        catch (Exception $e)
+        {
+            /*
+             * Si la funciona da error retornara Null;
+             */
+            echo "Error al realizar la conexión: " . $e->getMessage();
+            return null;
+        }
     }
 
 }
