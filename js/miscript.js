@@ -222,9 +222,9 @@ function seleccionarPelicula(indice,proyectadas){
                 $('#butacas').append(`<div class="filaButacas d-flex justify-content-center " id="fila${i}">  </div>`)
                 for (let j = 0; j < response.butacas; j++) {
                     if (j === (parseInt(response.butacas)/2)){
-                        $(`#fila${i}`).append(`<img id="fila:${i+1}:butaca:${j+1}" src="../img/silla.png" class="butaca ms-5">`)
+                        $(`#fila${i}`).append(`<img id="fila:${i+1}:butaca:${j+1}:sala:${indice}" src="../img/silla.png" class="butaca ms-5">`)
                     }else {
-                        $(`#fila${i}`).append(`<img id="fila:${i+1}:butaca:${j+1}" src="../img/silla.png" class="butaca">`)
+                        $(`#fila${i}`).append(`<img id="fila:${i+1}:butaca:${j+1}:sala:${indice}" src="../img/silla.png" class="butaca">`)
                     }
                 }
             }
@@ -243,6 +243,7 @@ function seleccionarPelicula(indice,proyectadas){
 
 
 }
+const entradasSeleccionadas = [];
 $(document).on('click','.butaca',(event) => {
     let source = $(event.target).attr('src');
     let libre = '../img/silla.png'
@@ -253,7 +254,7 @@ $(document).on('click','.butaca',(event) => {
     if (source === libre) {
         $(event.target).attr('src',seleccionado)
         $('#entradasSeleccionadas').append(`
-                <div id="Tarjetafila${idCortado[1]}butaca${idCortado[3]}" class="card">
+                <div id="Tarjetafila${idCortado[1]}butaca${idCortado[3]}sala${idCortado[5]}" class="card">
                 <div class="card-body">
                     <h5 class="card-title">Entrada Seleccionada</h5>
                     <p class="card-text">Fila ${idCortado[1]} Butaca ${idCortado[3]}</p>
@@ -266,7 +267,7 @@ $(document).on('click','.butaca',(event) => {
     }
     if (source === seleccionado){
         $(event.target).attr('src',libre)
-        let idTarjeta = `#Tarjetafila${idCortado[1]}butaca${idCortado[3]}`
+        let idTarjeta = `#Tarjetafila${idCortado[1]}butaca${idCortado[3]}sala${idCortado[5]}`
         $(idTarjeta).remove()
     }
 
