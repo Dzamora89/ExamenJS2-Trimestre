@@ -13,3 +13,8 @@
     height: 60px;
     width: 40px;
 }
+
+#iframe {
+    height: 40vh;
+    width: 40vw;
+}

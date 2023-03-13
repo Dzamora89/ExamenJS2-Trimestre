@@ -147,51 +147,55 @@ $('#acercaDe').on('click', () => {
             </div>
             
             `)
+            $.ajax({
+                // the server script you want to send your data to
+                'url': '../api/getAllSalas.php',
+                // all of your POST/GET variables
+                'data': {
+                    // 'dataname': $('input').val(), ...
+                },
+                // you may change this to GET, if you like...
+                'type': 'post',
+                // the kind of response that you want from the server
+                'dataType': 'json',
+                'beforeSend': function () {
+                    // anything you want to have happen before sending the data to the server...
+                    // useful for "loading" animations
+                }
+            })
+                .done( function (response) {
+                    // what you want to happen when an ajax call to the server is successfully completed
+                    // 'response' is what you get back from the script/server
+                    // usually you want to format your response and spit it out to the page
+                    $('#principal').append(' <div id="salas" class="container-fluid d-flex mt-5">')
+                    response.forEach(sala => {
+                        if (sala.idSala != 4) {
+                            let aforo = parseInt(sala.filas) * parseInt(sala.butacas)
+                            $('#salas').append(`
+                         <div class="container d-flex flex-column align-items-center h-25">
+                            <h1> ${sala.nombreSala} </h1>
+                             <h3>Aforo: ${aforo}</h3>
+                         </div>
+                    </div>
+            `)
+                        }
+                    })
+
+
+                })
+                .fail( function (code, status) {
+                    // what you want to happen if the ajax request fails (404 error, timeout, etc.)
+                    // 'code' is the numeric code, and 'status' is the text explanation for the error
+                    // I usually just output some fancy error messages
+                })
+                .always( function (xhr, status) {
+                    // what you want to have happen no matter if the response is success or error
+                    // here, you would "stop" your loading animations, and maybe output a footer at the end of your content, reading "done"
+                });
 
         }
     })
-    $.ajax({
-    	  // the server script you want to send your data to
-    		'url': '../api/getAllSalas.php',
-    		// all of your POST/GET variables
-    		'data': {
-    			// 'dataname': $('input').val(), ...
-    		},
-    		// you may change this to GET, if you like...
-    		'type': 'post',
-    		// the kind of response that you want from the server
-    		'dataType': 'json',
-    		'beforeSend': function () {
-    			// anything you want to have happen before sending the data to the server...
-    			// useful for "loading" animations
-    		}
-    	})
-    	.done( function (response) {
-    		// what you want to happen when an ajax call to the server is successfully completed
-    		// 'response' is what you get back from the script/server
-    		// usually you want to format your response and spit it out to the page
-            response.forEach(sala => {
-                if (sala.idSala != 4) {
-                    let aforo = parseInt(sala.filas) * parseInt(sala.butacas)
-                    $('#principal').append(`
-                <div class="container d-flex justify-content-center align-items-center flex-column mt-5">
-                    <h1> ${sala.nombreSala} </h1>
-                    <h3>Aforo: ${aforo}</h3>
-                </div>
-            `)
-                }
-            })
 
-    	})
-    	.fail( function (code, status) {
-    		// what you want to happen if the ajax request fails (404 error, timeout, etc.)
-    		// 'code' is the numeric code, and 'status' is the text explanation for the error
-    		// I usually just output some fancy error messages
-    	})
-    	.always( function (xhr, status) {
-    		// what you want to have happen no matter if the response is success or error
-    		// here, you would "stop" your loading animations, and maybe output a footer at the end of your content, reading "done"
-    	});
 })
 
 
@@ -261,6 +265,12 @@ $(document).on('click','.butaca',(event) => {
                 </div>
             </div>
                 `)
+        let entrada = {
+            fila: idCortado[1],
+            butaca: idCortado[3],
+            sala:idCortado[5]
+        }
+        entradasSeleccionadas.push(entrada)
     }
     if (source === ocupado){
         //Todo: Butacas Ocupadas
@@ -270,6 +280,9 @@ $(document).on('click','.butaca',(event) => {
         $(event.target).attr('src',libre)
         let idTarjeta = `#Tarjetafila${idCortado[1]}butaca${idCortado[3]}sala${idCortado[5]}`
         $(idTarjeta).remove()
+        let entradaAborrar = entradasSeleccionadas.find((entrada) =>
+            entrada.fila === idCortado[1] && entrada.butaca === idCortado[3] && entrada.butaca === idCortado[5]
+        )
     }
 
 })
