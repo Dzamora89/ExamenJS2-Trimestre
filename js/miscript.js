@@ -263,6 +263,7 @@ $(document).on('click','.butaca',(event) => {
                 `)
     }
     if (source === ocupado){
+        //Todo: Butacas Ocupadas
         alert('Esa butaca no esta disponible')
     }
     if (source === seleccionado){
