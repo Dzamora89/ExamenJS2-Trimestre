@@ -243,11 +243,11 @@ function seleccionarPelicula(indice,proyectadas){
     		// I usually just output some fancy error messages
     	})
 
-
+entradasSeleccionadas = [];
 
 
 }
-const entradasSeleccionadas = [];
+let entradasSeleccionadas = [];
 $(document).on('click','.butaca',(event) => {
     let source = $(event.target).attr('src');
     let libre = '../img/silla.png'
@@ -280,82 +280,17 @@ $(document).on('click','.butaca',(event) => {
         $(event.target).attr('src',libre)
         let idTarjeta = `#Tarjetafila${idCortado[1]}butaca${idCortado[3]}sala${idCortado[5]}`
         $(idTarjeta).remove()
-        let entradaAborrar = entradasSeleccionadas.find((entrada) =>
-            entrada.fila === idCortado[1] && entrada.butaca === idCortado[3] && entrada.butaca === idCortado[5]
-        )
+        let entradaAborrar = entradasSeleccionadas.filter((entrada) => entrada.fila === idCortado[1])
+            .filter(entrada => entrada.butaca === idCortado[3])
+            .filter(entrada => entrada.sala === idCortado[5])[0]
+        entradasSeleccionadas.splice(entradasSeleccionadas.indexOf(entradaAborrar),1)
     }
 
 })
 
-function reservarPelicula(){
-    let pelicula = listadoPelisJSON.find((peli) => peli.selecionada)
-    if (pelicula === undefined){
-        alert('1º Hay que selecionar una pelicula')
-    }else {
-        //Los damos como ok hasta que se demuestre le contrario
-        let datosOK = true
+function reservarPelicula($sala, $pelicula, $idUsuario){
 
-        let nombre = $('#nombreEspectador').val()
-        let fila = $('#filaEspectador').val()
-        let butaca = $('#butacaEspectador').val()
-
-        if (nombre === ''){
-            datosOK = false
-        }
-        if (fila === ''){
-            datosOK = false
-        }
-        if (butaca === ''){
-            datosOK = false
-        }
-
-        if (!datosOK){
-            alert("El nombre, la fila y la butaca son obligatorios")
-            return false
-        }
-
-
-
-        let entradaOK = true
-        pelicula.entradas.forEach((entrada) => {
-            if (entrada.fila === fila && entrada.butaca === butaca){
-                entradaOK = false
-            }
-        })
-
-        if (!entradaOK){
-            alert('Esa fila y butaca estan ocupadas')
-            return false
-        }
-
-
-
-        if (datosOK && entradaOK){
-            const entrada = {
-                'titular' : nombre,
-                'fila' : fila,
-                'butaca' : butaca
-            }
-            pelicula.entradas.push(entrada)
-            let espectadores = pelicula.entradas.length
-            if (espectadores === 1){
-                $('.listadoVendidas').append(tituloDePeliculaHtml(pelicula.nombre))
-            }else {
-                $('.listadoVendidas').find('.cabecera').each(function (){
-                    if ($(this).children().eq(0).text() === pelicula.nombre){
-                        $(this).children().eq(1).text(`${espectadores} asientos vendidos`)
-                    }
-                })
-            }
-
-            $('.listadoVendidas').find('.cabecera').each(function () {
-                if ($(this).children().eq(0).text() === pelicula.nombre){
-                    $(this).parent().append(filaReservaHtml(entrada.titular,entrada.fila,entrada.butaca,pelicula.nombre))
-                }
-            })
-    }
-
-}}
+}
 
 
 
