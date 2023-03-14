@@ -23,7 +23,3 @@ H
 API/Model/InfoBasica.php,b\7\b7e08e602be0d4a7e88ec65fab9a4635d301463e
 G
 API/Model/Peliculas.php,d\d\ddc6695d3c8fd3f107f8fac387d453317d1769a9
-G
-API/getAllPeliculas.php,9\9\99e3f069a39eef8619a129f6b135a9eab12ed976
-D
-seccionEntradas.html,e\d\ed098f57380339e09d26b51852b4abbddf91fd78

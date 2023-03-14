@@ -15,12 +15,8 @@ C
 API/Model/Salas.php,9\f\9f61485c2aeb3c297da0d333dee77798b2999e49
 @
 API/acercaDe.php,9\f\9fd1e7288c664e7f08f5264365fe4154f9e68654
-G
-API/getAllPeliculas.php,9\9\99e3f069a39eef8619a129f6b135a9eab12ed976
 @
 labutaca (1).sql,1\4\14272bb0027a3dbaa99a063564dfe0f258ceed66
-D
-seccionEntradas.html,e\d\ed098f57380339e09d26b51852b4abbddf91fd78
 G
 API/Model/Peliculas.php,d\d\ddc6695d3c8fd3f107f8fac387d453317d1769a9
 H
